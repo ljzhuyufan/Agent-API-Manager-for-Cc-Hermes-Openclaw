@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐕 doge API Env Manager</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <h1>🐕 doge API <span class="dim">Environment Manager</span></h1>
+    <span class="badge">v2</span>
+  </header>
+
+  <!-- Target 切换 Tab -->
+  <nav class="target-tabs" id="target-tabs">
+    <!-- 由 JS 动态渲染 -->
+  </nav>
+
+  <!-- 当前环境面板 -->
+  <section class="panel" id="status-panel">
+    <div class="panel-header">
+      <h2>当前环境</h2>
+      <span class="profile-tag" id="active-profile-tag"></span>
+    </div>
+    <div class="env-table">
+      <div class="env-row">
+        <span class="env-key" id="label-apikey">ANTHROPIC_API_KEY</span>
+        <code class="env-val" id="status-key">—</code>
+      </div>
+      <div class="env-row">
+        <span class="env-key" id="label-baseurl">ANTHROPIC_BASE_URL</span>
+        <code class="env-val dim" id="status-url">—</code>
+      </div>
+      <div class="env-row">
+        <span class="env-key" id="label-model">ANTHROPIC_MODEL</span>
+        <code class="env-val" id="status-model">—</code>
+      </div>
+    </div>
+  </section>
+
+  <!-- 操作栏 -->
+  <div class="toolbar">
+    <button class="btn btn-primary" id="btn-save-current" title="将当前环境保存为新的 profile">保存当前环境</button>
+    <button class="btn btn-outline" id="btn-new-profile">新建 Profile</button>
+    <button class="btn btn-ghost" id="btn-refresh">↻ 刷新</button>
+  </div>
+
+  <!-- Profile 列表 -->
+  <section class="panel" id="profiles-panel">
+    <h2>Profiles</h2>
+    <div id="profile-list" class="profile-list">
+      <div class="empty">加载中...</div>
+    </div>
+  </section>
+</div>
+
+<!-- 保存当前环境弹窗 -->
+<div class="modal-overlay hidden" id="modal-save">
+  <div class="modal">
+    <h3>保存当前环境</h3>
+    <p class="modal-desc">将 <span id="target-display-save">Claude Code</span> 的当前环境保存为 profile</p>
+    <input type="text" class="input" id="input-save-name" placeholder="例如：deepseek-prod" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-save')">取消</button>
+      <button class="btn btn-primary" id="btn-save-confirm">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新建 Profile 弹窗 -->
+<div class="modal-overlay hidden" id="modal-create">
+  <div class="modal">
+    <h3>新建 Profile</h3>
+    <p class="modal-desc">为 <span id="target-display-create">Claude Code</span> 手动创建 API 连接信息</p>
+    <div class="form-group">
+      <label>名称 <span class="required">*</span></label>
+      <input type="text" class="input" id="input-create-name" placeholder="例如：official" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-create-apikey">ANTHROPIC_API_KEY <span class="required">*</span></label>
+      <input type="text" class="input" id="input-create-key" placeholder="sk-ant-xxxxxxxx" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-create-baseurl">ANTHROPIC_BASE_URL</label>
+      <input type="text" class="input" id="input-create-url" placeholder="留空 = Anthropic 官方" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-create-model">ANTHROPIC_MODEL</label>
+      <input type="text" class="input" id="input-create-model" placeholder="例如：claude-sonnet-4-6" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-create')">取消</button>
+      <button class="btn btn-primary" id="btn-create-confirm">创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- 详情弹窗 -->
+<div class="modal-overlay hidden" id="modal-detail">
+  <div class="modal">
+    <h3 id="detail-title">Profile 详情</h3>
+    <div class="env-table" id="detail-content"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-detail')">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- 编辑 Profile 弹窗 -->
+<div class="modal-overlay hidden" id="modal-edit">
+  <div class="modal">
+    <h3>编辑 Profile</h3>
+    <p class="modal-desc" id="modal-edit-desc">修改 API 连接信息</p>
+    <div class="form-group">
+      <label>名称</label>
+      <input type="text" class="input" id="input-edit-name" placeholder="profile 名称" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-edit-apikey">API Key <span class="required">*</span></label>
+      <input type="text" class="input" id="input-edit-key" placeholder="sk-ant-xxxxxxxx" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-edit-baseurl">Base URL</label>
+      <input type="text" class="input" id="input-edit-url" placeholder="留空 = 默认" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label id="label-edit-model">Model</label>
+      <input type="text" class="input" id="input-edit-model" placeholder="例如：claude-sonnet-4-6" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-edit')">取消</button>
+      <button class="btn btn-primary" id="btn-edit-confirm">保存修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast hidden" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
