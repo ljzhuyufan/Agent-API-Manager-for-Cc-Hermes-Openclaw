@@ -4,7 +4,14 @@
 # 管理多 target 的 API profile（ANTHROPIC_API_KEY / BASE_URL / MODEL）
 # ============================================================
 
-PROFILES_DIR="$HOME/.doge/api-profiles"
+# ─── Claude Code 路径自动检测：doge 魔改版 vs 官方版 ──
+if [ -d "$HOME/.doge" ]; then
+  CLAUDE_CONFIG_DIR="$HOME/.doge"
+else
+  CLAUDE_CONFIG_DIR="$HOME/.claude"
+fi
+
+PROFILES_DIR="${CLAUDE_CONFIG_DIR}/api-profiles"
 DEFAULT_TARGET="claude-code"
 mkdir -p "$PROFILES_DIR"
 

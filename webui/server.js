@@ -6,7 +6,16 @@ const os = require('os');
 const PORT = 3987;
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const HOME = os.homedir();
-const PROFILES_DIR = path.join(HOME, '.doge', 'api-profiles');
+
+// ── Claude Code 路径自动检测：doge 魔改版 vs 官方版 ──────
+function detectClaudeConfigDir() {
+  const dogeDir = path.join(HOME, '.doge');
+  if (fs.existsSync(dogeDir)) return dogeDir;
+  return path.join(HOME, '.claude');
+}
+const CLAUDE_CONFIG_DIR = detectClaudeConfigDir();
+
+const PROFILES_DIR = path.join(CLAUDE_CONFIG_DIR, 'api-profiles');
 const NOTIFY_FILE = path.join(PROFILES_DIR, '.switch-notify');
 
 // ── TARGET DEFINITIONS ────────────────────────────────────
@@ -14,7 +23,7 @@ const NOTIFY_FILE = path.join(PROFILES_DIR, '.switch-notify');
 const TARGETS = {
   'claude-code': {
     label: 'Claude Code',
-    configDir: path.join(HOME, '.doge'),
+    configDir: CLAUDE_CONFIG_DIR,
     activeFile: path.join(HOME, '.claude-env.sh'),
     envKeys: {
       apiKey: 'ANTHROPIC_API_KEY',
@@ -24,16 +33,14 @@ const TARGETS = {
     // 切换 profile 时的额外同步文件
     sync: [
       {
-        path: path.join(HOME, '.doge', 'settings.json'),
+        path: path.join(CLAUDE_CONFIG_DIR, 'settings.json'),
         type: 'json',
         writable: true,
-        // model 同步到哪些 field path
         modelFields: ['model', 'customApiEndpoint.model'],
-        // 额外 env 变量同步
         envFields: { ANTHROPIC_MODEL: 'model' },
       },
       {
-        path: path.join(HOME, '.doge', '.claude.json'),
+        path: path.join(CLAUDE_CONFIG_DIR, '.claude.json'),
         type: 'json',
         writable: true,
         modelFields: ['model', 'customApiEndpoint.model'],
