@@ -16,7 +16,7 @@
 
 | 工具 | CLI 简写 | 配置目录 | API Key 变量 |
 |------|---------|---------|-------------|
-| Claude Code | `cc` | `~/.doge/` 或 `~/.claude/`（自动检测） | `ANTHROPIC_API_KEY` |
+| Claude Code | `cc` | `~/.claude/` | `ANTHROPIC_API_KEY` |
 | Hermes | `hermes` | `~/.hermes/` | `OPENROUTER_API_KEY` |
 | OpenClaw | `oc` | `~/.openclaw/` | `api_key` |
 
@@ -53,7 +53,7 @@ bash scripts/api-env.sh interactive
 
 ## Profile 机制
 
-每个 profile 是一个 `.env` 文件，存在 `~/.doge/api-profiles/`（或 `~/.claude/api-profiles/`，取决于自动检测结果）。文件头有 target 标记：
+每个 profile 是一个 `.env` 文件，存在 `~/.claude/api-profiles/`。文件头有 target 标记：
 
 ```
 # api-env target: claude-code
@@ -89,6 +89,6 @@ api管理程序/
 
 ## 安全
 
-- 所有 API Key 只存在本地 `~/.doge/api-profiles/`，不上传、不同步
+- 所有 API Key 只存在本地 `~/.claude/api-profiles/`，不上传、不同步
 - 源码不含任何硬编码密钥
 - profile 文件建议设权限 `chmod 600`

@@ -50,7 +50,7 @@ bash scripts/api-env.sh -t oc status     # oc = OpenClaw
 
 | Target | 配置目录 | Active 文件 | API Key 变量 |
 |--------|---------|------------|-------------|
-| Claude Code (`cc`) | `~/.doge/` 或 `~/.claude/`（自动检测） | `~/.claude-env.sh` | `ANTHROPIC_API_KEY` |
+| Claude Code (`cc`) | `~/.claude/` | `~/.claude-env.sh` | `ANTHROPIC_API_KEY` |
 | Hermes | `~/.hermes/` | `~/.hermes/.env` | `OPENROUTER_API_KEY` |
 | OpenClaw (`oc`) | `~/.openclaw/` | `~/.openclaw/agent.yaml` | `api_key` |
 
@@ -89,13 +89,7 @@ api管理程序/
 | PUT | /api/profiles/:name | 编辑 profile |
 | DELETE | /api/profiles/:name | 删除 profile |
 
-## 路径自动检测
-
-程序启动时检测 `~/.doge/` 是否存在：
-- 存在 → 使用 doge 魔改版路径（`~/.doge/settings.json`, `~/.doge/.claude.json`）
-- 不存在 → 回退 Claude Code 官方路径（`~/.claude/settings.json`, `~/.claude/.claude.json`）
-
-Profile 目录也随之变化：`~/.doge/api-profiles/` 或 `~/.claude/api-profiles/`。
+配置目录为 `~/.claude/`，profile 存储在 `~/.claude/api-profiles/`。
 
 ## Profile 存储
 

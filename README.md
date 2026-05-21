@@ -18,7 +18,7 @@ The desktop app uses Edge WebView2 — zero extra dependencies on Windows 11. Th
 
 | Tool | Alias | Config Directory | API Key Variable |
 |------|-------|-----------------|-----------------|
-| Claude Code | `cc` | `~/.doge/` or `~/.claude/` (auto-detected) | `ANTHROPIC_API_KEY` |
+| Claude Code | `cc` | `~/.claude/` | `ANTHROPIC_API_KEY` |
 | Hermes | `hermes` | `~/.hermes/` | `OPENROUTER_API_KEY` |
 | OpenClaw | `oc` | `~/.openclaw/` | `api_key` |
 
@@ -55,7 +55,7 @@ bash scripts/api-env.sh interactive
 
 ## How Profiles Work
 
-Each profile is a `.env` file stored under `~/.doge/api-profiles/` (or `~/.claude/api-profiles/`, depending on auto-detection). A target marker in the file header identifies which tool it belongs to:
+Each profile is a `.env` file stored under `~/.claude/api-profiles/`. A target marker in the file header identifies which tool it belongs to:
 
 ```
 # api-env target: claude-code
@@ -92,6 +92,6 @@ Zero npm packages. Pure Node.js built-in modules only.
 
 ## Security
 
-- All API keys are stored locally under `~/.doge/api-profiles/` — never uploaded or synced
+- All API keys are stored locally under `~/.claude/api-profiles/` — never uploaded or synced
 - Source code contains no hardcoded credentials
 - Recommended: `chmod 600` on profile files
